@@ -21,5 +21,5 @@ fn uptime() -> Result<Duration> {
 	{
 		return Err(std::io::Error::last_os_error().into());
 	}
-	return Ok(Duration::from_secs(uptime.tv_sec.try_into()?));
+	Ok(Duration::from_secs(uptime.tv_sec.try_into()?))
 }
