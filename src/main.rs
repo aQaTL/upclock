@@ -23,3 +23,29 @@ fn uptime() -> Result<Duration> {
 	}
 	Ok(Duration::from_secs(uptime.tv_sec.try_into()?))
 }
+
+#[cfg(target_os = "linux")]
+fn uptime() -> Result<Duration> {
+	let mut sysinfo = libc::sysinfo {
+		uptime: 0,
+		loads: [0; 3],
+		totalram: 0,
+		freeram: 0,
+		sharedram: 0,
+		bufferram: 0,
+		totalswap: 0,
+		freeswap: 0,
+		procs: 0,
+		pad: 0,
+		totalhigh: 0,
+		freehigh: 0,
+		mem_unit: 0,
+		_f: [],
+	};
+
+	if unsafe { libc::sysinfo(&mut sysinfo as *mut libc::sysinfo) } != 0 {
+		return Err(std::io::Error::last_os_error().into());
+	}
+
+	Ok(Duration::from_secs(sysinfo.uptime.try_into()?))
+}
