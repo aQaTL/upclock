@@ -24,7 +24,7 @@ fn uptime() -> Result<Duration> {
 	Ok(Duration::from_secs(uptime.tv_sec.try_into()?))
 }
 
-#[cfg(target_os = "linux")]
+#[cfg(any(target_os = "linux", target_os = "android"))]
 fn uptime() -> Result<Duration> {
 	let mut sysinfo: libc::sysinfo = unsafe { std::mem::zeroed() };
 
